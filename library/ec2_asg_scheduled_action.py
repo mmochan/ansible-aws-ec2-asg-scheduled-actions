@@ -196,7 +196,6 @@ def main():
         (changed, results) = put_scheduled_update_group_action(client, module)
         module.exit_json(changed=changed, results=results)
     else:
-        #(changed, results) = delete_scheduled_action(state, client, module)
         (changed, results) = delete_scheduled_action(client, module)
         module.exit_json(changed=changed, results=results)
 
