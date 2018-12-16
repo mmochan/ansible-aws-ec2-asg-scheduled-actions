@@ -14,6 +14,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+#
+# A Munro: 16 Dec 2018
+# Was not working on ansible 2.7, so updated to work, including full state present/absent
+# and reporting changes. More flexibility on settings that can be set in the playbook, etc.
+#
 DOCUMENTATION = '''
 module: ec2_asg_scheduled_actions
 short_description: create, modify and delete AutoScaling Scheduled Actions.
@@ -154,13 +159,6 @@ def put_scheduled_update_group_action(client, module):
       xx = xx[0]
       exists = describe_scheduled_actions(client, module)
       yy = exists.get("ScheduledUpdateGroupActions")[0]
-
-      for x in ['StartTime','EndTime','Time']:
-        if x in xx:
-           xx.pop(x)
-
-        if x in yy:
-           yy.pop(x)
 
       if xx != yy:
         changed = True
