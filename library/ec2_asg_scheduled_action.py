@@ -113,6 +113,10 @@ def format_request(module):
 def delete_scheduled_action(client, module):
     changed = False
     actions = describe_scheduled_actions(client, module)
+
+    if not "ScheduledUpdateGroupActions" in actions:
+      return changed, actions
+
     xx = actions.get("ScheduledUpdateGroupActions")
 
     if len(xx) == 0:
