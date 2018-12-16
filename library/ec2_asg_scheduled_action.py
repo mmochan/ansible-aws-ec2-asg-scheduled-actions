@@ -32,10 +32,18 @@ options:
     required: true
   state:
     description:
-      - Create, delete, accept, reject a peering connection.
+      - Whether the schedule is present or absent.
     required: false
     default: present
     choices: ['present', 'absent']
+  desired_capacity:
+    description:
+      - asg desired capacity.
+    required: true
+  recurrence:
+    description:
+      - cron style schedule.
+    required: true
 author: Mike Mochan(@mmochan)
 extends_documentation_fragment: aws
 '''
@@ -81,6 +89,7 @@ def format_request(module):
     request['Recurrence'] = module.params.get('recurrence')
     request['DesiredCapacity'] = module.params.get('desired_capacity')
 
+    # Some of these are optional
     if module.params.get('min_size') != None:
       request['MinSize'] = module.params.get('min_size')
 
@@ -126,13 +135,6 @@ def describe_scheduled_actions(client, module):
     except botocore.exceptions.ClientError as e:
         pass
     return actions
-
-# The boto module requires a start and end time, and the deploy of the put sets the time it was created.
-# Thus we can't really check on the times, and must pull these off the compare for changes.
-# Also the startTime needs to be now or in the future, so that is unlikely to be specified in the playbook
-# as aws does not allow it to be in the past! So most likely only the schedule will be specified in the playbook.
-# Otherwise we need to do a fairly complex diff on what we would put against what is already there.
-# So the change on startTime and EndTime is ignored and only other settings are compared.
 
 def put_scheduled_update_group_action(client, module):
     changed = False
