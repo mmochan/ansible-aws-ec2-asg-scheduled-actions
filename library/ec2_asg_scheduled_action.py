@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # (c) 2016, Mike Mochan <@mmochan>
 #
 # This file is part of Ansible
@@ -193,15 +194,15 @@ def main():
     try:
         region, ec2_url, aws_connect_kwargs = get_aws_connection_info(module, boto3=True)
         client = boto3_conn(module, conn_type='client', resource='autoscaling', region=region, endpoint=ec2_url, **aws_connect_kwargs)
-    except botocore.exceptions.NoCredentialsError, e:
+    except botocore.exceptions.NoCredentialsError as e:
         module.fail_json(msg="Can't authorize connection - " + str(e))
 
     if state == 'present':
         (changed, results) = put_scheduled_update_group_action(client, module)
-        module.exit_json(changed=changed, results=results)
+        module.exit_json(changed=changed, ansible_module_results=results)
     else:
         (changed, results) = delete_scheduled_action(client, module)
-        module.exit_json(changed=changed, results=results)
+        module.exit_json(changed=changed, ansible_module_results=results)
 
 
 # import module snippets
