@@ -199,10 +199,10 @@ def main():
 
     if state == 'present':
         (changed, results) = put_scheduled_update_group_action(client, module)
-        module.exit_json(changed=changed, results=results)
+        module.exit_json(changed=changed, ansible_module_results=results)
     else:
         (changed, results) = delete_scheduled_action(client, module)
-        module.exit_json(changed=changed, results=results)
+        module.exit_json(changed=changed, ansible_module_results=results)
 
 
 # import module snippets
